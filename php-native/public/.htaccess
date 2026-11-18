@@ -1,0 +1,37 @@
+# 单聊辅助 - public 目录
+# 仅允许访问指定资源，禁止访问 uploads/exports 中的 .php
+
+# 启用 URL 重写 (Nginx 优先，此处为 Apache 备选)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # 非真实文件/目录的请求都路由到 index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+# uploads/exports 禁止执行 PHP
+<Directory "uploads">
+    <FilesMatch "\.(php|phtml|php3|php4|php5|phar)$">
+        Require all denied
+    </FilesMatch>
+    php_flag engine off
+</Directory>
+<Directory "exports">
+    <FilesMatch "\.(php|phtml|php3|php4|php5|phar)$">
+        Require all denied
+    </FilesMatch>
+    php_flag engine off
+</Directory>
+
+# 安全头
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "no-referrer-when-downgrade"
+</IfModule>
+
+# 禁止访问 .htaccess 自身等隐藏文件
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

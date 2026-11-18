@@ -1,0 +1,122 @@
+; ===========================================================
+; 单聊辅助 v1.0 - PHP 8.5 配置示例
+; 用法: 追加到主 php.ini 或保存为 /etc/php/8.5/fpm/conf.d/99-danchat.ini
+; ===========================================================
+
+[PHP]
+; ---- 基础 ----
+engine = On
+short_open_tag = Off
+precision = 14
+output_buffering = 4096
+expose_php = Off
+max_execution_time = 60
+max_input_time = 60
+memory_limit = 256M
+date.timezone = "Asia/Shanghai"
+
+; ---- 错误显示 (生产环境关闭) ----
+display_errors = Off
+display_startup_errors = Off
+log_errors = On
+error_log = /var/log/php/danchat_error.log
+error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
+
+; ---- 文件上传 (与 Nginx 一致) ----
+file_uploads = On
+upload_max_filesize = 50M
+post_max_size = 52M
+max_file_uploads = 20
+max_input_nesting_level = 64
+
+; ---- 会话 ----
+session.save_handler = files
+session.save_path = "/var/lib/php/sessions"
+session.name = DANCHAT_SID
+session.auto_start = Off
+session.cookie_lifetime = 0
+session.cookie_path = /
+session.cookie_domain =
+session.cookie_secure = 0
+session.cookie_httponly = 1
+session.cookie_samesite = "Lax"
+session.use_strict_mode = 1
+session.use_cookies = 1
+session.use_only_cookies = 1
+session.use_trans_sid = 0
+session.gc_maxlifetime = 604800
+session.gc_probability = 1
+session.gc_divisor = 100
+
+; ---- OPcache (强烈推荐开启) ----
+opcache.enable = 1
+opcache.enable_cli = 0
+opcache.memory_consumption = 256
+opcache.interned_strings_buffer = 16
+opcache.max_accelerated_files = 20000
+opcache.validate_timestamps = 1
+opcache.revalidate_freq = 2
+opcache.fast_shutdown = 1
+opcache.save_comments = 1
+opcache.jit = tracing
+opcache.jit_buffer_size = 128M
+
+; ---- 字符 ----
+default_charset = "UTF-8"
+internal_encoding = "UTF-8"
+input_encoding = "UTF-8"
+output_encoding = "UTF-8"
+mbstring.language = Chinese
+mbstring.internal_encoding = "UTF-8"
+mbstring.http_input = "UTF-8"
+mbstring.http_output = "UTF-8"
+mbstring.encoding_translation = Off
+mbstring.func_overload = 0
+
+; ---- cURL ----
+curl.cainfo = "/etc/ssl/certs/ca-certificates.crt"
+openssl.cafile = "/etc/ssl/certs/ca-certificates.crt"
+
+; ---- 安全: 禁用危险函数 (可选) ----
+disable_functions = exec,passthru,shell_exec,system,proc_open,popen,curl_multi_exec,parse_ini_file,show_source
+
+; ---- 限制访问 (本项目目录) ----
+; open_basedir = /var/www/danchat:/tmp:/var/lib/php/sessions
+
+; ---- Realpath Cache (性能) ----
+realpath_cache_size = 4096k
+realpath_cache_ttl = 600
+
+; ---- 国际化 ----
+intl.default_locale = "zh_CN"
+
+; ---- PDO ----
+pdo_mysql.default_socket =
+
+; ---- MySQLi ----
+mysqli.default_socket =
+mysqli.default_host =
+mysqli.default_user =
+mysqli.default_pw =
+mysqli.reconnect = Off
+
+; ===========================================================
+; 推荐 php-fpm pool 设置 (/etc/php/8.5/fpm/pool.d/danchat.conf)
+; ===========================================================
+; [danchat]
+; user  = www-data
+; group = www-data
+; listen = /run/php/php8.5-fpm.sock
+; listen.owner = www-data
+; listen.group = www-data
+; listen.mode  = 0660
+; pm = dynamic
+; pm.max_children = 20
+; pm.start_servers = 4
+; pm.min_spare_servers = 2
+; pm.max_spare_servers = 8
+; pm.max_requests = 500
+; request_terminate_timeout = 120s
+; php_admin_value[memory_limit] = 256M
+; php_admin_value[upload_max_filesize] = 50M
+; php_admin_value[post_max_size] = 52M

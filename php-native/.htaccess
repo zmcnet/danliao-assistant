@@ -1,0 +1,6 @@
+# 单聊辅助 - 根目录安全
+# 禁止直接访问除 public 之外的任何文件
+# (Nginx 部署时此文件无效，安全由 nginx.conf 控制)
+
+# 拒绝所有直接访问
+Require all denied

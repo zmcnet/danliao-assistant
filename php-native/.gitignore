@@ -1,0 +1,56 @@
+# ===========================================
+# 单聊辅助 v1.0 - .gitignore
+# ===========================================
+
+# 依赖目录
+/vendor/
+/node_modules/
+
+# 用户上传/导出
+/public/uploads/*
+!/public/uploads/.gitkeep
+/public/exports/*
+!/public/exports/.gitkeep
+
+# 临时文件
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.project
+.buildpath
+.settings/
+
+# 日志
+*.log
+/logs/
+
+# 环境配置
+.env
+.env.local
+.env.*.local
+
+# Composer
+composer.phar
+
+# 敏感信息
+*.pem
+*.key
+*.crt
+
+# PHP 测试
+.phpunit.result.cache
+.phpunit.cache/
+
+# 数据库快照
+*.sql.gz
+*.dump

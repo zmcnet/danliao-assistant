@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.log
+.venv/
+venv/
+
+# PHP 本地配置（含密钥与数据库密码）
+php-native/config/config.php
+php-native/config/config.php.bak
+
+# 运行期数据（含真实学生信息，绝不可提交）
+*.db
+students.db
+
+# 导出文件
+php-native/public/exports/*
+php-native/public/uploads/*
+!php-native/public/exports/.gitkeep
+!php-native/public/uploads/.gitkeep
+
+# 系统
+.DS_Store
+Thumbs.db

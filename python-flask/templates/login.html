@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学员信息管理系统 - 登录</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon">📚</div>
+                <h1>学员信息管理系统</h1>
+                <p class="login-subtitle">学生信息管理 & AI辅助系统</p>
+            </div>
+            <div class="login-tabs">
+                <button class="login-tab active" data-tab="login">登录</button>
+                <button class="login-tab" data-tab="register" id="registerTab">注册</button>
+            </div>
+            <div id="loginForm" class="login-form active">
+                <div class="fluent-textbox">
+                    <input type="text" id="loginUsername" placeholder=" " required>
+                    <label>用户名</label>
+                </div>
+                <div class="fluent-textbox">
+                    <input type="password" id="loginPassword" placeholder=" " required>
+                    <label>密码</label>
+                </div>
+                <button class="fluent-button primary" onclick="doLogin()">登 录</button>
+                <p id="loginError" class="error-message"></p>
+            </div>
+            <div id="registerForm" class="login-form">
+                <div class="fluent-textbox">
+                    <input type="text" id="regUsername" placeholder=" " required>
+                    <label>用户名</label>
+                </div>
+                <div class="fluent-textbox">
+                    <input type="text" id="regDisplayName" placeholder=" ">
+                    <label>显示名称</label>
+                </div>
+                <div class="fluent-textbox">
+                    <input type="password" id="regPassword" placeholder=" " required>
+                    <label>密码</label>
+                </div>
+                <div class="fluent-textbox">
+                    <input type="password" id="regConfirm" placeholder=" " required>
+                    <label>确认密码</label>
+                </div>
+                <p style="font-size:11px;color:var(--text-muted);margin-top:-8px;margin-bottom:8px;text-align:center">首次注册默认为管理员</p>
+                <button class="fluent-button primary" onclick="doRegister()">注 册</button>
+                <p id="registerError" class="error-message"></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 切换登录/注册
+        document.querySelectorAll('.login-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab + 'Form').classList.add('active');
+                document.getElementById('loginError').textContent = '';
+                document.getElementById('registerError').textContent = '';
+            });
+        });
+
+        // 检查是否首次注册
+        fetch('/api/auth/check_first').then(r => r.json()).then(data => {
+            if (data.is_first) {
+                document.getElementById('registerTab').click();
+            }
+        });
+
+        // 回车键登录
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                const activeForm = document.querySelector('.login-form.active');
+                if (activeForm.id === 'loginForm') doLogin();
+                else doRegister();
+            }
+        });
+
+        function doLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+
+            if (!username || !password) {
+                errorEl.textContent = '请输入用户名和密码';
+                return;
+            }
+
+            fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/';
+                } else {
+                    errorEl.textContent = data.error;
+                }
+            })
+            .catch(() => errorEl.textContent = '网络错误');
+        }
+
+        function doRegister() {
+            const username = document.getElementById('regUsername').value.trim();
+            const displayName = document.getElementById('regDisplayName').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirm').value;
+            const errorEl = document.getElementById('registerError');
+
+            if (!username || !password) {
+                errorEl.textContent = '请填写用户名和密码';
+                return;
+            }
+            if (password !== confirm) {
+                errorEl.textContent = '两次密码不一致';
+                return;
+            }
+            if (password.length < 4) {
+                errorEl.textContent = '密码至少4位';
+                return;
+            }
+
+            fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password, display_name: displayName || username, is_first: true})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('loginUsername').value = username;
+                    document.getElementById('loginPassword').value = password;
+                    document.querySelector('[data-tab="login"]').click();
+                    document.getElementById('loginError').textContent = '注册成功，请登录';
+                    document.getElementById('loginError').style.color = '#107C10';
+                } else {
+                    errorEl.textContent = data.error;
+                }
+            })
+            .catch(() => errorEl.textContent = '网络错误');
+        }
+    </script>
+</body>
+</html>

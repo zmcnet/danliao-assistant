@@ -1,0 +1,180 @@
+/* 登录页样式 - Fluent Design 美化版 */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Microsoft YaHei', 'PingFang SC', sans-serif;
+    background: linear-gradient(135deg, #e8edf5 0%, #d5dce8 50%, #e8edf5 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 40%, rgba(0, 120, 212, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(0, 120, 212, 0.02) 0%, transparent 50%);
+    animation: bgShift 20s ease infinite;
+}
+
+@keyframes bgShift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-10px, -10px); }
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.login-card {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(24px) saturate(1.3);
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08), 0 2px 12px rgba(0, 0, 0, 0.04);
+    padding: 44px 36px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    animation: cardIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.login-header { text-align: center; margin-bottom: 32px; }
+.login-icon { font-size: 56px; margin-bottom: 12px; display: block; }
+.login-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+    background: linear-gradient(135deg, #0078D4, #005A9E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.login-subtitle { font-size: 14px; color: var(--text-secondary, #666); }
+
+.login-tabs {
+    display: flex; gap: 0;
+    margin-bottom: 28px;
+    background: #f0f2f5;
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.login-tab {
+    flex: 1; padding: 10px 16px;
+    border: none; background: transparent;
+    font-size: 14px; font-weight: 500;
+    color: #666; cursor: pointer;
+    border-radius: 8px; transition: all 0.2s;
+    font-family: inherit;
+}
+
+.login-tab.active {
+    background: #fff;
+    color: #1a1a2e;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    font-weight: 600;
+}
+
+.login-form { display: none; animation: fadeIn 0.3s ease; }
+.login-form.active { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fluent-textbox {
+    position: relative;
+    margin-bottom: 22px;
+}
+
+.fluent-textbox input {
+    width: 100%;
+    padding: 14px 14px 10px;
+    font-size: 14px;
+    border: 1px solid #d1d5e0;
+    border-radius: 8px;
+    outline: none;
+    background: #f8f9fc;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.fluent-textbox input:focus {
+    border-color: #0078D4;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.15);
+}
+
+.fluent-textbox label {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #888;
+    pointer-events: none;
+    transition: all 0.2s;
+    background: transparent;
+    padding: 0 4px;
+}
+
+.fluent-textbox input:focus + label,
+.fluent-textbox input:not(:placeholder-shown) + label {
+    top: -8px;
+    font-size: 11px;
+    color: #0078D4;
+    background: #fff;
+    font-weight: 600;
+}
+
+.fluent-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    margin-top: 4px;
+}
+
+.fluent-button.primary {
+    background: linear-gradient(135deg, #0078D4, #106EBE);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(0, 120, 212, 0.25);
+}
+
+.fluent-button.primary:hover {
+    background: linear-gradient(135deg, #1988E0, #0078D4);
+    box-shadow: 0 6px 20px rgba(0, 120, 212, 0.35);
+    transform: translateY(-1px);
+}
+
+.fluent-button.primary:active {
+    transform: translateY(0);
+}
+
+.error-message {
+    margin-top: 14px;
+    font-size: 13px;
+    color: #D13438;
+    text-align: center;
+    min-height: 20px;
+    font-weight: 500;
+}
